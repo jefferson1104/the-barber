@@ -41,7 +41,10 @@ export default function Home() {
         </div>
 
         {/* Appointments */}
-        <Card className="mt-6">
+        <h2 className="mb-3 mt-6 text-xs font-bold uppercase text-gray-400">
+          Appointments
+        </h2>
+        <Card>
           <CardContent className="flex justify-between p-0">
             <div className="flex flex-col gap-2 py-5 pl-5">
               <Badge className="w-fit">Confirmed</Badge>
@@ -53,7 +56,6 @@ export default function Home() {
                 <p className="text-sm">Queen&#39;s Barber</p>
               </div>
             </div>
-
             <div className="flex flex-col items-center justify-center border-l-2 border-solid px-5">
               <p className="text-sm">August</p>
               <p className="text-2xl">7th</p>
