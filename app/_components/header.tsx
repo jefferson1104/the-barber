@@ -5,6 +5,7 @@ import { Card, CardContent } from "./ui/card"
 import { Button } from "./ui/button"
 
 export const Header = () => {
+  // Renders
   return (
     <Card>
       <CardContent className="flex flex-row items-center justify-between p-5">
