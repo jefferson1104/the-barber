@@ -1,7 +1,7 @@
-"use client"
-
 import Image from "next/image"
 import { SearchIcon } from "lucide-react"
+
+import { db } from "./_lib/prisma"
 
 import { Header } from "./_components/header"
 import { Input } from "./_components/ui/input"
@@ -9,8 +9,12 @@ import { Button } from "./_components/ui/button"
 import { Card, CardContent } from "./_components/ui/card"
 import { Badge } from "./_components/ui/badge"
 import { Avatar, AvatarImage } from "./_components/ui/avatar"
+import { BarbershopItem } from "./_components/barbershop-item"
 
-export default function Home() {
+const Home = async () => {
+  // Constants
+  const barbershops = await db.barbershop.findMany({})
+
   // Renders
   return (
     <div>
@@ -63,7 +67,19 @@ export default function Home() {
             </div>
           </CardContent>
         </Card>
+
+        {/* Recommended */}
+        <h2 className="mb-3 mt-6 text-xs font-bold uppercase text-gray-400">
+          Recommended
+        </h2>
+        <div className="flex gap-4 overflow-auto [&::-webkit-scrollbar]:hidden">
+          {barbershops.map((barbershop) => (
+            <BarbershopItem key={barbershop.id} barbershop={barbershop} />
+          ))}
+        </div>
       </div>
     </div>
   )
 }
+
+export default Home
