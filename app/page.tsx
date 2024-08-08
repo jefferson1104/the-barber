@@ -3,6 +3,8 @@ import { SearchIcon } from "lucide-react"
 
 import { db } from "./_lib/prisma"
 
+import { categories } from "./_utils/categories"
+
 import { Header } from "./_components/header"
 import { Input } from "./_components/ui/input"
 import { Button } from "./_components/ui/button"
@@ -37,6 +39,21 @@ const Home = async () => {
           <Button>
             <SearchIcon />
           </Button>
+        </div>
+
+        {/* Categories */}
+        <div className="mt-6 flex gap-3 overflow-x-scroll [&::-webkit-scrollbar]:hidden">
+          {categories.map((category) => (
+            <Button className="gap-2" variant="secondary" key={category.title}>
+              <Image
+                src={category.imageUrl}
+                width={16}
+                height={16}
+                alt={category.title}
+              />
+              {category.title}
+            </Button>
+          ))}
         </div>
 
         {/* Banner */}
