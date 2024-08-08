@@ -13,7 +13,12 @@ import { BarbershopItem } from "./_components/barbershop-item"
 
 const Home = async () => {
   // Constants
-  const barbershops = await db.barbershop.findMany({})
+  const recommendedBarbershops = await db.barbershop.findMany({})
+  const popularBarbershops = await db.barbershop.findMany({
+    orderBy: {
+      name: "desc",
+    },
+  })
 
   // Renders
   return (
@@ -73,11 +78,33 @@ const Home = async () => {
           Recommended
         </h2>
         <div className="flex gap-4 overflow-auto [&::-webkit-scrollbar]:hidden">
-          {barbershops.map((barbershop) => (
+          {recommendedBarbershops.map((barbershop) => (
+            <BarbershopItem key={barbershop.id} barbershop={barbershop} />
+          ))}
+        </div>
+
+        {/* Popular */}
+        <h2 className="mb-3 mt-6 text-xs font-bold uppercase text-gray-400">
+          Popular
+        </h2>
+        <div className="flex gap-4 overflow-auto [&::-webkit-scrollbar]:hidden">
+          {popularBarbershops.map((barbershop) => (
             <BarbershopItem key={barbershop.id} barbershop={barbershop} />
           ))}
         </div>
       </div>
+
+      {/* Footer */}
+      <footer>
+        <Card>
+          <CardContent className="px-5 py-6">
+            <p className="text-sm text-gray-400">
+              @ 2024 <span className="font-bold">Soares Dev LTDA</span>. All
+              rights reserved.
+            </p>
+          </CardContent>
+        </Card>
+      </footer>
     </div>
   )
 }
