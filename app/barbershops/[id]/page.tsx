@@ -8,6 +8,8 @@ import { db } from "@/app/_lib/prisma"
 import { Button } from "@/app/_components/ui/button"
 import { ServiceItem } from "@/app/_components/service-item"
 import { PhoneItem } from "@/app/_components/phone-item"
+import { Sheet, SheetTrigger } from "@/app/_components/ui/sheet"
+import { Sidebar } from "@/app/_components/sidebar"
 
 interface BarberShopPageProps {
   params: {
@@ -53,13 +55,18 @@ const BarbershopPage = async ({ params }: BarberShopPageProps) => {
           </Link>
         </Button>
 
-        <Button
-          className="absolute right-4 top-4"
-          variant="secondary"
-          size="icon"
-        >
-          <MenuIcon />
-        </Button>
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button
+              className="absolute right-4 top-4"
+              size="icon"
+              variant="outline"
+            >
+              <MenuIcon />
+            </Button>
+          </SheetTrigger>
+          <Sidebar />
+        </Sheet>
       </div>
 
       {/* Info */}
