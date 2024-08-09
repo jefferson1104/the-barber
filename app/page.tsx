@@ -8,7 +8,6 @@ import { categories } from "./_utils/categories"
 import { Header } from "./_components/header"
 import { Input } from "./_components/ui/input"
 import { Button } from "./_components/ui/button"
-import { Card, CardContent } from "./_components/ui/card"
 import { BarbershopItem } from "./_components/barbershop-item"
 import { BookingItem } from "./_components/booking-item"
 
@@ -88,18 +87,6 @@ const Home = async () => {
           ))}
         </div>
       </div>
-
-      {/* Footer */}
-      <footer>
-        <Card>
-          <CardContent className="px-5 py-6">
-            <p className="text-sm text-gray-400">
-              @ 2024 <span className="font-bold">Soares Dev LTDA</span>. All
-              rights reserved.
-            </p>
-          </CardContent>
-        </Card>
-      </footer>
     </div>
   )
 }
