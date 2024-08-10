@@ -1,5 +1,8 @@
+"use client"
+
 import Link from "next/link"
 import Image from "next/image"
+import { signIn, signOut, useSession } from "next-auth/react"
 
 import { CalendarIcon, HomeIcon, LogInIcon, LogOutIcon } from "lucide-react"
 
@@ -15,8 +18,16 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./ui/dialog"
+import { Avatar, AvatarImage } from "./ui/avatar"
 
 export const Sidebar = () => {
+  // Hooks
+  const { data } = useSession()
+
+  // Methods
+  const loginWithGoogleHandler = () => signIn("google")
+  const signOutHandler = () => signOut()
+
   // Renders
   return (
     <SheetContent className="overflow-y-auto">
@@ -25,44 +36,51 @@ export const Sidebar = () => {
       </SheetHeader>
 
       <div className="flex items-center justify-between gap-3 border-b border-solid py-5">
-        <h2 className="font-bold">Hello, sign in!</h2>
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button size="icon">
-              <LogInIcon />
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="w-[90%]">
-            <DialogHeader>
-              <DialogTitle>Sign in to the platform</DialogTitle>
-              <DialogDescription>
-                Sign in using your Google account
-              </DialogDescription>
-            </DialogHeader>
+        {data?.user ? (
+          <div className="flex items-center gap-2">
+            <Avatar>
+              <AvatarImage src={data.user.image ?? ""} alt="user avatar" />
+            </Avatar>
 
-            <Button className="gap-1 font-bold" variant="outline">
-              <Image
-                src="/icons/google.svg"
-                width={18}
-                height={18}
-                alt="google sign in"
-              />
-              Google
-            </Button>
-          </DialogContent>
-        </Dialog>
+            <div>
+              <p className="font-bold">{data.user.name}</p>
+              <p className="text-sm">{data.user.email}</p>
+            </div>
+          </div>
+        ) : (
+          <>
+            <h2 className="font-bold">Hello, sign in!</h2>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button size="icon">
+                  <LogInIcon />
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="w-[90%]">
+                <DialogHeader>
+                  <DialogTitle>Sign in to the platform</DialogTitle>
+                  <DialogDescription>
+                    Sign in using your Google account
+                  </DialogDescription>
+                </DialogHeader>
 
-        {/* <Avatar>
-          <AvatarImage
-            src="https://plus.unsplash.com/premium_photo-1711987238385-fc2a6736fdb4?q=80&w=1814&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-            alt="user avatar"
-          />
-        </Avatar>
-
-        <div>
-          <p className="font-bold">Jefferson Soares</p>
-          <p className="text-sm">jeffersonscjunior@gmail.com</p>
-        </div> */}
+                <Button
+                  className="gap-1 font-bold"
+                  variant="outline"
+                  onClick={loginWithGoogleHandler}
+                >
+                  <Image
+                    src="/icons/google.svg"
+                    width={18}
+                    height={18}
+                    alt="google sign in"
+                  />
+                  Google
+                </Button>
+              </DialogContent>
+            </Dialog>
+          </>
+        )}
       </div>
 
       <div className="flex flex-col gap-1 border-b border-solid p-5">
@@ -100,9 +118,13 @@ export const Sidebar = () => {
       </div>
 
       <div className="flex flex-col gap-1 p-5">
-        <Button className="justify-start gap-2" variant="ghost">
+        <Button
+          className="justify-start gap-2"
+          variant="ghost"
+          onClick={signOutHandler}
+        >
           <LogOutIcon size={18} />
-          Log Out
+          Sign Out
         </Button>
       </div>
     </SheetContent>
