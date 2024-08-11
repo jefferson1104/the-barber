@@ -1,27 +1,27 @@
 "use client"
-import { useState } from "react"
+
+import { useEffect, useState } from "react"
 import Image from "next/image"
-import { Barbershop, BarbershopService } from "@prisma/client"
+import { Barbershop, BarbershopService, Booking } from "@prisma/client"
 import { format, set } from "date-fns"
 import { enUS } from "date-fns/locale"
 import { useSession } from "next-auth/react"
 import { toast } from "sonner"
 
 import { createBooking } from "../_actions/create-booking"
+import { getBookings } from "../_actions/get-bookings"
 
-import { TIME_LIST } from "../_utils/time-list"
+import { getTimeList } from "../_utils/time-list"
 
 import { Button } from "./ui/button"
 import { Card, CardContent } from "./ui/card"
 import { Calendar } from "./ui/calendar"
 import {
   Sheet,
-  SheetClose,
   SheetContent,
   SheetFooter,
   SheetHeader,
   SheetTitle,
-  SheetTrigger,
 } from "./ui/sheet"
 
 interface ServiceItemProps {
@@ -34,6 +34,8 @@ export const ServiceItem = ({ service, barbershop }: ServiceItemProps) => {
   const { data } = useSession()
 
   // States
+  const [bookingSheetIsOpen, setBookingSheetIsOpen] = useState(false)
+  const [dayBookings, setDayBookings] = useState<Booking[]>([])
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined)
   const [selectedTime, setSelectedTime] = useState<string | undefined>(
     undefined,
@@ -64,12 +66,34 @@ export const ServiceItem = ({ service, barbershop }: ServiceItemProps) => {
         userId: (data?.user as any).id,
         date: newDate,
       })
+      bookingSheetOpenChangeHandler()
       toast.success("Booking created successfully")
     } catch (error) {
       console.error("createBookingHandler() Error ", JSON.stringify(error))
       toast.error("Error creating booking")
     }
   }
+
+  const bookingSheetOpenChangeHandler = () => {
+    setDayBookings([])
+    setSelectedDate(undefined)
+    setSelectedTime(undefined)
+    setBookingSheetIsOpen(false)
+  }
+
+  // Effects
+  useEffect(() => {
+    const fetch = async () => {
+      if (!selectedDate) return
+      const bookings = await getBookings({
+        date: selectedDate,
+        serviceId: service.id,
+      })
+      setDayBookings(bookings)
+    }
+
+    fetch()
+  }, [selectedDate, service.id])
 
   // Renders
   return (
@@ -98,12 +122,17 @@ export const ServiceItem = ({ service, barbershop }: ServiceItemProps) => {
                 currency: "USD",
               }).format(Number(service.price))}
             </p>
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button variant="secondary" size="sm">
-                  Book
-                </Button>
-              </SheetTrigger>
+            <Sheet
+              open={bookingSheetIsOpen}
+              onOpenChange={bookingSheetOpenChangeHandler}
+            >
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => setBookingSheetIsOpen(true)}
+              >
+                Book
+              </Button>
               <SheetContent className="px-0">
                 <SheetHeader>
                   <SheetTitle>Book a service</SheetTitle>
@@ -115,6 +144,7 @@ export const ServiceItem = ({ service, barbershop }: ServiceItemProps) => {
                     locale={enUS}
                     selected={selectedDate}
                     onSelect={selectDateHandler}
+                    fromDate={new Date()}
                     styles={{
                       head_cell: {
                         width: "100%",
@@ -141,7 +171,7 @@ export const ServiceItem = ({ service, barbershop }: ServiceItemProps) => {
 
                 {selectedDate && (
                   <div className="flex gap-3 overflow-x-auto border-b border-solid p-5 [&::-webkit-scrollbar]:hidden">
-                    {TIME_LIST.map((time) => (
+                    {getTimeList(dayBookings).map((time) => (
                       <Button
                         className="rounded-full"
                         key={time}
@@ -190,14 +220,12 @@ export const ServiceItem = ({ service, barbershop }: ServiceItemProps) => {
                 )}
 
                 <SheetFooter className="mt-5 px-5">
-                  <SheetClose asChild>
-                    <Button
-                      onClick={createBookingHandler}
-                      disabled={!selectedDate || !selectedTime}
-                    >
-                      Confirm
-                    </Button>
-                  </SheetClose>
+                  <Button
+                    onClick={createBookingHandler}
+                    disabled={!selectedDate || !selectedTime}
+                  >
+                    Confirm
+                  </Button>
                 </SheetFooter>
               </SheetContent>
             </Sheet>
