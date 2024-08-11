@@ -3,12 +3,12 @@
 import Link from "next/link"
 import Image from "next/image"
 import { signIn, signOut, useSession } from "next-auth/react"
-
 import { CalendarIcon, HomeIcon, LogInIcon, LogOutIcon } from "lucide-react"
 
 import { categories } from "../_utils/categories"
 
 import { Button } from "./ui/button"
+import { Avatar, AvatarImage } from "./ui/avatar"
 import { SheetClose, SheetContent, SheetHeader, SheetTitle } from "./ui/sheet"
 import {
   Dialog,
@@ -18,7 +18,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./ui/dialog"
-import { Avatar, AvatarImage } from "./ui/avatar"
 
 export const Sidebar = () => {
   // Hooks

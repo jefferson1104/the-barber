@@ -1,11 +1,11 @@
 import Image from "next/image"
+import Link from "next/link"
 import { Barbershop } from "@prisma/client"
 import { StarIcon } from "lucide-react"
 
 import { Card, CardContent } from "./ui/card"
 import { Button } from "./ui/button"
 import { Badge } from "./ui/badge"
-import Link from "next/link"
 
 interface BarbershopItemProps {
   barbershop: Barbershop

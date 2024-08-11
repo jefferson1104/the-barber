@@ -1,15 +1,14 @@
 import Image from "next/image"
-import { SearchIcon } from "lucide-react"
 
 import { db } from "./_lib/prisma"
 
 import { categories } from "./_utils/categories"
 
 import { Header } from "./_components/header"
-import { Input } from "./_components/ui/input"
 import { Button } from "./_components/ui/button"
 import { BarbershopItem } from "./_components/barbershop-item"
 import { BookingItem } from "./_components/booking-item"
+import { Search } from "./_components/search"
 
 const Home = async () => {
   // Constants
@@ -32,11 +31,8 @@ const Home = async () => {
         <p>Wednesday, August 5th</p>
 
         {/* Search */}
-        <div className="mt-6 flex flex-row items-center gap-2">
-          <Input placeholder="do your search..." />
-          <Button>
-            <SearchIcon />
-          </Button>
+        <div className="mt-6">
+          <Search />
         </div>
 
         {/* Categories */}
