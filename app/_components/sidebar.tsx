@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import Image from "next/image"
-import { signIn, signOut, useSession } from "next-auth/react"
+import { signOut, useSession } from "next-auth/react"
 import { CalendarIcon, HomeIcon, LogInIcon, LogOutIcon } from "lucide-react"
 
 import { categories } from "../_utils/categories"
@@ -10,21 +10,14 @@ import { categories } from "../_utils/categories"
 import { Button } from "./ui/button"
 import { Avatar, AvatarImage } from "./ui/avatar"
 import { SheetClose, SheetContent, SheetHeader, SheetTitle } from "./ui/sheet"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "./ui/dialog"
+import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog"
+import { SignInModal } from "./sign-in-modal"
 
 export const Sidebar = () => {
   // Hooks
   const { data } = useSession()
 
   // Methods
-  const loginWithGoogleHandler = () => signIn("google")
   const signOutHandler = () => signOut()
 
   // Renders
@@ -56,26 +49,7 @@ export const Sidebar = () => {
                 </Button>
               </DialogTrigger>
               <DialogContent className="w-[90%]">
-                <DialogHeader>
-                  <DialogTitle>Sign in to the platform</DialogTitle>
-                  <DialogDescription>
-                    Sign in using your Google account
-                  </DialogDescription>
-                </DialogHeader>
-
-                <Button
-                  className="gap-1 font-bold"
-                  variant="outline"
-                  onClick={loginWithGoogleHandler}
-                >
-                  <Image
-                    src="/icons/google.svg"
-                    width={18}
-                    height={18}
-                    alt="google sign in"
-                  />
-                  Google
-                </Button>
+                <SignInModal />
               </DialogContent>
             </Dialog>
           </>
