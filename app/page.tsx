@@ -1,4 +1,5 @@
 import Image from "next/image"
+import Link from "next/link"
 
 import { db } from "./_lib/prisma"
 
@@ -38,14 +39,21 @@ const Home = async () => {
         {/* Categories */}
         <div className="mt-6 flex gap-3 overflow-x-scroll [&::-webkit-scrollbar]:hidden">
           {categories.map((category) => (
-            <Button className="gap-2" variant="secondary" key={category.title}>
-              <Image
-                src={category.imageUrl}
-                width={16}
-                height={16}
-                alt={category.title}
-              />
-              {category.title}
+            <Button
+              className="gap-2"
+              variant="secondary"
+              key={category.title}
+              asChild
+            >
+              <Link href={`/barbershops?service=${category.title}`}>
+                <Image
+                  src={category.imageUrl}
+                  width={16}
+                  height={16}
+                  alt={category.title}
+                />
+                {category.title}
+              </Link>
             </Button>
           ))}
         </div>

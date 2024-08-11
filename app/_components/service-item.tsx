@@ -30,9 +30,9 @@ export const ServiceItem = ({ service }: ServiceItemProps) => {
 
           <div className="flex items-center justify-between">
             <p className="text-sm font-bold text-primary">
-              {Intl.NumberFormat("pt-BR", {
+              {Intl.NumberFormat("en-US", {
                 style: "currency",
-                currency: "BRL",
+                currency: "USD",
               }).format(Number(service.price))}
             </p>
             <Button variant="secondary" size="sm">

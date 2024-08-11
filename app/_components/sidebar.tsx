@@ -82,7 +82,7 @@ export const Sidebar = () => {
         )}
       </div>
 
-      <div className="flex flex-col gap-1 border-b border-solid p-5">
+      <div className="flex flex-col gap-1 border-b border-solid py-5">
         <SheetClose asChild>
           <Button className="justify-start gap-2" variant="ghost" asChild>
             <Link href="/">
@@ -98,25 +98,25 @@ export const Sidebar = () => {
         </Button>
       </div>
 
-      <div className="flex flex-col gap-1 border-b border-solid p-5">
+      <div className="flex flex-col gap-1 border-b border-solid py-5">
         {categories.map((category) => (
-          <Button
-            className="justify-start gap-2"
-            variant="ghost"
-            key={category.title}
-          >
-            <Image
-              src={category.imageUrl}
-              alt={category.title}
-              height={18}
-              width={18}
-            />
-            {category.title}
-          </Button>
+          <SheetClose key={category.title} asChild>
+            <Button className="justify-start gap-2" variant="ghost" asChild>
+              <Link href={`/barbershops?service=${category.title}`}>
+                <Image
+                  src={category.imageUrl}
+                  alt={category.title}
+                  height={18}
+                  width={18}
+                />
+                {category.title}
+              </Link>
+            </Button>
+          </SheetClose>
         ))}
       </div>
 
-      <div className="flex flex-col gap-1 p-5">
+      <div className="flex flex-col gap-1 py-5">
         <Button
           className="justify-start gap-2"
           variant="ghost"
