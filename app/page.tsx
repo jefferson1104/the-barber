@@ -12,10 +12,12 @@ import { Button } from "./_components/ui/button"
 import { BarbershopItem } from "./_components/barbershop-item"
 import { BookingItem } from "./_components/booking-item"
 import { Search } from "./_components/search"
+import { format } from "date-fns"
 
 const Home = async () => {
   // Constants
   const session = await getServerSession(authOptions)
+  const currentDate = format(new Date(), "EEEE, MMMM d")
   const recommendedBarbershops = await db.barbershop.findMany({})
   const popularBarbershops = await db.barbershop.findMany({
     orderBy: {
@@ -50,8 +52,12 @@ const Home = async () => {
       <Header />
       <div className="p-5">
         {/* Text */}
-        <h2 className="text-xl font-bold">Hello, Jefferson Soares!</h2>
-        <p>Wednesday, August 5th</p>
+        <h2 className="text-xl font-bold">
+          {session && session.user
+            ? `Hello, ${session.user.name}`
+            : "Welcome to The Barber!"}
+        </h2>
+        <p>{currentDate}</p>
 
         {/* Search */}
         <div className="mt-6">
