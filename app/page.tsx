@@ -1,7 +1,9 @@
 import Image from "next/image"
 import Link from "next/link"
+import { getServerSession } from "next-auth"
 
 import { db } from "./_lib/prisma"
+import { authOptions } from "./_lib/auth"
 
 import { categories } from "./_utils/categories"
 
@@ -13,19 +15,39 @@ import { Search } from "./_components/search"
 
 const Home = async () => {
   // Constants
+  const session = await getServerSession(authOptions)
   const recommendedBarbershops = await db.barbershop.findMany({})
   const popularBarbershops = await db.barbershop.findMany({
     orderBy: {
       name: "desc",
     },
   })
+  const confirmedBookings = session?.user
+    ? await db.booking.findMany({
+        where: {
+          userId: (session?.user as any).id,
+          date: {
+            gte: new Date(),
+          },
+        },
+        include: {
+          service: {
+            include: {
+              barbershop: true,
+            },
+          },
+        },
+        orderBy: {
+          date: "asc",
+        },
+      })
+    : []
 
   // Renders
   return (
     <div>
       {/* header */}
       <Header />
-
       <div className="p-5">
         {/* Text */}
         <h2 className="text-xl font-bold">Hello, Jefferson Soares!</h2>
@@ -68,8 +90,19 @@ const Home = async () => {
           />
         </div>
 
-        {/* Appointments */}
-        <BookingItem />
+        {/* Bookings */}
+        {session?.user && (
+          <>
+            <h2 className="mb-3 mt-6 text-xs font-bold uppercase text-gray-400">
+              Bookings
+            </h2>
+            <div className="flex gap-3 overflow-x-auto [&::-webkit-scrollbar]:hidden">
+              {confirmedBookings.map((booking) => (
+                <BookingItem key={booking.id} booking={booking} />
+              ))}
+            </div>
+          </>
+        )}
 
         {/* Recommended */}
         <h2 className="mb-3 mt-6 text-xs font-bold uppercase text-gray-400">
