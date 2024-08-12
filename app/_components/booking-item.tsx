@@ -1,3 +1,5 @@
+"use client"
+
 import { Prisma } from "@prisma/client"
 import { format, isFuture } from "date-fns"
 import { enUS } from "date-fns/locale"
@@ -7,13 +9,30 @@ import { Avatar, AvatarImage } from "./ui/avatar"
 import { Badge } from "./ui/badge"
 import {
   Sheet,
+  SheetClose,
   SheetContent,
+  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
 } from "./ui/sheet"
 import Image from "next/image"
 import { PhoneItem } from "./phone-item"
+import { Button } from "./ui/button"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "./ui/alert-dialog"
+import { deleteBooking } from "../_actions/delete-booking"
+import { toast } from "sonner"
+import { useState } from "react"
 
 interface BookingItemProps {
   booking: Prisma.BookingGetPayload<{
@@ -22,15 +41,33 @@ interface BookingItemProps {
 }
 
 export const BookingItem = ({ booking }: BookingItemProps) => {
+  const [isSheetOpen, setIsSheetOpen] = useState(false)
+
   // Constants
   const isConfirmed = isFuture(booking.date)
   const {
     service: { barbershop },
   } = booking
 
+  // Methods
+  const deleteBookingHandler = async () => {
+    try {
+      await deleteBooking(booking.id)
+      setIsSheetOpen(false)
+      toast.success("Booking canceled successfully")
+    } catch (error) {
+      console.error("deleteBookingHandler() Error: ", error)
+      toast.error("An error occurred while canceling the booking")
+    }
+  }
+
+  const openSheetChangeHandler = (isOpen: boolean) => {
+    setIsSheetOpen(isOpen)
+  }
+
   // Renders
   return (
-    <Sheet>
+    <Sheet open={isSheetOpen} onOpenChange={openSheetChangeHandler}>
       <SheetTrigger className="w-full">
         <Card className="min-w-[90%]">
           <CardContent className="flex justify-between p-0">
@@ -65,7 +102,7 @@ export const BookingItem = ({ booking }: BookingItemProps) => {
           </CardContent>
         </Card>
       </SheetTrigger>
-      <SheetContent className="w-[90%]">
+      <SheetContent className="w-[85%]">
         <SheetHeader>
           <SheetTitle className="text-left">Booking information</SheetTitle>
         </SheetHeader>
@@ -136,6 +173,50 @@ export const BookingItem = ({ booking }: BookingItemProps) => {
             ))}
           </div>
         </div>
+
+        <SheetFooter className="mt-6">
+          <div className="flex items-center gap-3">
+            <SheetClose asChild>
+              <Button className="w-full" variant="outline">
+                Back
+              </Button>
+            </SheetClose>
+
+            {isConfirmed && (
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button className="w-full" variant="destructive">
+                    Cancel Booking
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent className="w-[90%]">
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>
+                      Are you sure you want to cancel this booking?
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This action cannot be undone.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction
+                      asChild
+                      className="bg-red-600 hover:bg-red-500"
+                    >
+                      <Button
+                        variant="destructive"
+                        onClick={deleteBookingHandler}
+                      >
+                        Continue
+                      </Button>
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            )}
+          </div>
+        </SheetFooter>
       </SheetContent>
     </Sheet>
   )
