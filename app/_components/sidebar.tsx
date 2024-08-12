@@ -90,16 +90,18 @@ export const Sidebar = () => {
         ))}
       </div>
 
-      <div className="flex flex-col gap-1 py-5">
-        <Button
-          className="justify-start gap-2"
-          variant="ghost"
-          onClick={signOutHandler}
-        >
-          <LogOutIcon size={18} />
-          Sign Out
-        </Button>
-      </div>
+      {data?.user && (
+        <div className="flex flex-col gap-1 py-5">
+          <Button
+            className="justify-start gap-2"
+            variant="ghost"
+            onClick={signOutHandler}
+          >
+            <LogOutIcon size={18} />
+            Sign Out
+          </Button>
+        </div>
+      )}
     </SheetContent>
   )
 }
