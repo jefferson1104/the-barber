@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import Image from "next/image"
 import { Barbershop, BarbershopService, Booking } from "@prisma/client"
 import { format, set } from "date-fns"
@@ -90,6 +90,12 @@ export const ServiceItem = ({ service, barbershop }: ServiceItemProps) => {
 
     return setSignInModalIsOpen(true)
   }
+
+  const timeList = useMemo(() => {
+    if (!selectedDate) return []
+
+    return getTimeList({ bookings: dayBookings, selectedDate })
+  }, [dayBookings, selectedDate])
 
   // Effects
   useEffect(() => {
@@ -182,18 +188,22 @@ export const ServiceItem = ({ service, barbershop }: ServiceItemProps) => {
 
                   {selectedDate && (
                     <div className="flex gap-3 overflow-x-auto border-b border-solid p-5 [&::-webkit-scrollbar]:hidden">
-                      {getTimeList(dayBookings).map((time) => (
-                        <Button
-                          className="rounded-full"
-                          key={time}
-                          variant={
-                            selectedTime === time ? "default" : "outline"
-                          }
-                          onClick={() => selectTimeHandler(time)}
-                        >
-                          {time}
-                        </Button>
-                      ))}
+                      {timeList.length > 0 ? (
+                        timeList.map((time) => (
+                          <Button
+                            className="rounded-full"
+                            key={time}
+                            variant={
+                              selectedTime === time ? "default" : "outline"
+                            }
+                            onClick={() => selectTimeHandler(time)}
+                          >
+                            {time}
+                          </Button>
+                        ))
+                      ) : (
+                        <p className="text-xs">No available times</p>
+                      )}
                     </div>
                   )}
 

@@ -1,3 +1,4 @@
+import { isPast, isToday, set } from "date-fns"
 import { Booking } from "@prisma/client"
 
 export const TIME_LIST = [
@@ -14,10 +15,20 @@ export const TIME_LIST = [
   "20:00",
 ]
 
-export const getTimeList = (bookings: Booking[]) => {
+interface GetTimeListProps {
+  bookings: Booking[]
+  selectedDate: Date
+}
+
+export const getTimeList = ({ bookings, selectedDate }: GetTimeListProps) => {
   const timelist = TIME_LIST.filter((time) => {
     const hour = Number(time.split(":")[0])
     const minutes = Number(time.split(":")[1])
+
+    const timeIsOnThePast = isPast(set(new Date(), { hours: hour, minutes }))
+    if (timeIsOnThePast && isToday(selectedDate)) {
+      return false
+    }
 
     const hasBookingOnCurrentTime = bookings.some(
       (booking) =>
