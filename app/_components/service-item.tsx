@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react"
 import Image from "next/image"
+import { useRouter } from "next/navigation"
 import { Barbershop, BarbershopService, Booking } from "@prisma/client"
 import { set } from "date-fns"
 import { enUS } from "date-fns/locale"
@@ -35,6 +36,7 @@ interface ServiceItemProps {
 export const ServiceItem = ({ service, barbershop }: ServiceItemProps) => {
   // Hooks
   const { data } = useSession()
+  const router = useRouter()
 
   // States
   const [signInModalIsOpen, setSignInModalIsOpen] = useState(false)
@@ -62,7 +64,14 @@ export const ServiceItem = ({ service, barbershop }: ServiceItemProps) => {
         date: selectedDate,
       })
       bookingSheetOpenChangeHandler()
-      toast.success("Booking created successfully")
+      toast.success("Booking created successfully", {
+        action: {
+          label: "View bookings",
+          onClick: () => {
+            router.push("/bookings")
+          },
+        },
+      })
     } catch (error) {
       console.error("createBookingHandler() Error ", JSON.stringify(error))
       toast.error("Error creating booking")

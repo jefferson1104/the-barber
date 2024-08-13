@@ -66,12 +66,14 @@ export const Sidebar = () => {
           </Button>
         </SheetClose>
 
-        <Button className="justify-start gap-2" variant="ghost" asChild>
-          <Link href="/bookings">
-            <CalendarIcon size={18} />
-            Bookings
-          </Link>
-        </Button>
+        <SheetClose asChild>
+          <Button className="justify-start gap-2" variant="ghost" asChild>
+            <Link href="/bookings">
+              <CalendarIcon size={18} />
+              Bookings
+            </Link>
+          </Button>
+        </SheetClose>
       </div>
 
       <div className="flex flex-col gap-1 border-b border-solid py-5">
