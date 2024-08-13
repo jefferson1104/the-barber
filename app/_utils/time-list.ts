@@ -17,16 +17,16 @@ export const TIME_LIST = [
 
 interface GetTimeListProps {
   bookings: Booking[]
-  selectedDate: Date
+  selectedDay: Date
 }
 
-export const getTimeList = ({ bookings, selectedDate }: GetTimeListProps) => {
+export const getTimeList = ({ bookings, selectedDay }: GetTimeListProps) => {
   const timelist = TIME_LIST.filter((time) => {
     const hour = Number(time.split(":")[0])
     const minutes = Number(time.split(":")[1])
 
     const timeIsOnThePast = isPast(set(new Date(), { hours: hour, minutes }))
-    if (timeIsOnThePast && isToday(selectedDate)) {
+    if (timeIsOnThePast && isToday(selectedDay)) {
       return false
     }
 

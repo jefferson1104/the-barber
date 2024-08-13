@@ -1,12 +1,20 @@
 "use client"
 
+import { useState } from "react"
+import Image from "next/image"
 import { Prisma } from "@prisma/client"
 import { format, isFuture } from "date-fns"
 import { enUS } from "date-fns/locale"
+import { toast } from "sonner"
+
+import { deleteBooking } from "../_actions/delete-booking"
 
 import { Card, CardContent } from "./ui/card"
 import { Avatar, AvatarImage } from "./ui/avatar"
 import { Badge } from "./ui/badge"
+import { Button } from "./ui/button"
+import { PhoneItem } from "./phone-item"
+import { BookingSummary } from "./booking.summary"
 import {
   Sheet,
   SheetClose,
@@ -16,9 +24,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "./ui/sheet"
-import Image from "next/image"
-import { PhoneItem } from "./phone-item"
-import { Button } from "./ui/button"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -30,9 +35,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "./ui/alert-dialog"
-import { deleteBooking } from "../_actions/delete-booking"
-import { toast } from "sonner"
-import { useState } from "react"
 
 interface BookingItemProps {
   booking: Prisma.BookingGetPayload<{
@@ -135,37 +137,13 @@ export const BookingItem = ({ booking }: BookingItemProps) => {
             {isConfirmed ? "Confirmed" : "Finalized"}
           </Badge>
 
-          <Card className="mb-6 mt-3">
-            <CardContent className="space-y-3 p-3">
-              <div className="flex items-center justify-between">
-                <h2 className="font-bold">{booking.service.name}</h2>
-                <p className="text-sm font-bold">
-                  {Intl.NumberFormat("en-US", {
-                    style: "currency",
-                    currency: "USD",
-                  }).format(Number(booking.service.price))}
-                </p>
-              </div>
-              <div className="flex items-center justify-between">
-                <h2 className="text-sm text-gray-400">Date</h2>
-                <p className="text-sm">
-                  {format(booking.date, "MMMM dd", {
-                    locale: enUS,
-                  })}
-                </p>
-              </div>
-              <div className="flex items-center justify-between">
-                <h2 className="text-sm text-gray-400">Time</h2>
-                <p className="text-sm">
-                  {format(booking.date, "hh:mm a", { locale: enUS })}
-                </p>
-              </div>
-              <div className="flex items-center justify-between">
-                <h2 className="text-sm text-gray-400">Barber shop</h2>
-                <p className="text-sm">{barbershop.name}</p>
-              </div>
-            </CardContent>
-          </Card>
+          <div className="mb-6 mt-3">
+            <BookingSummary
+              barbershop={barbershop}
+              service={booking.service}
+              selectedDate={booking.date}
+            />
+          </div>
 
           <div className="space-y-3">
             {barbershop.phones.map((phone, index) => (
