@@ -17,7 +17,7 @@ import { format } from "date-fns"
 const Home = async () => {
   // Constants
   const session = await getServerSession(authOptions)
-  const currentDate = format(new Date(), "EEEE, MMMM d")
+  const today = format(new Date(), "EEEE, MMMM d")
   const recommendedBarbershops = await db.barbershop.findMany({})
   const popularBarbershops = await db.barbershop.findMany({
     orderBy: {
@@ -53,11 +53,9 @@ const Home = async () => {
       <div className="p-5">
         {/* Text */}
         <h2 className="text-xl font-bold">
-          {session && session.user
-            ? `Hello, ${session.user.name}`
-            : "Welcome to The Barber!"}
+          Hello, {session?.user ? session.user.name?.split(" ")[0] : "Welcome"}!
         </h2>
-        <p>{currentDate}</p>
+        <p>{today}</p>
 
         {/* Search */}
         <div className="mt-6">
