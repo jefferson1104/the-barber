@@ -13,37 +13,19 @@ import { BarbershopItem } from "./_components/barbershop-item"
 import { BookingItem } from "./_components/booking-item"
 import { Search } from "./_components/search"
 import { format } from "date-fns"
+import { getConfirmedBookings } from "./_data/get-confirmed-bookings"
 
 const Home = async () => {
   // Constants
   const session = await getServerSession(authOptions)
   const today = format(new Date(), "EEEE, MMMM d")
+  const confirmedBookings = await getConfirmedBookings()
   const recommendedBarbershops = await db.barbershop.findMany({})
   const popularBarbershops = await db.barbershop.findMany({
     orderBy: {
       name: "desc",
     },
   })
-  const confirmedBookings = session?.user
-    ? await db.booking.findMany({
-        where: {
-          userId: (session?.user as any).id,
-          date: {
-            gte: new Date(),
-          },
-        },
-        include: {
-          service: {
-            include: {
-              barbershop: true,
-            },
-          },
-        },
-        orderBy: {
-          date: "asc",
-        },
-      })
-    : []
 
   // Renders
   return (
