@@ -11,7 +11,7 @@ export const Header = () => {
   // Renders
   return (
     <Card>
-      <CardContent className="flex flex-row items-center justify-between p-5">
+      <CardContent className="flex flex-row items-center justify-between p-5 xl:px-32">
         <Link href="/">
           <Image
             src="/images/logo.png"
