@@ -138,7 +138,7 @@ const Home = async () => {
               <div className="flex flex-col">
                 <h2 className="text-xl font-bold">
                   Hello,{" "}
-                  {session?.user ? session.user.name?.split(" ")[0] : "Welcome"}
+                  {session?.user ? session.user.name?.split(" ")[0] : "Log in!"}
                   !
                 </h2>
                 <p className="mb-6">{today}</p>
