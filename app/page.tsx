@@ -29,12 +29,10 @@ const Home = async () => {
   const today = format(new Date(), "EEEE, MMMM d")
   const confirmedBookings = await getConfirmedBookings()
   const hasConfirmedBookings = confirmedBookings.length > 0
-
   const recommendedBarbershops = await db.barbershop.findMany({
     orderBy: {
       name: "asc",
     },
-    take: 3,
   })
   const popularBarbershops = await db.barbershop.findMany({
     orderBy: {
@@ -135,16 +133,31 @@ const Home = async () => {
       <div className="hidden md:contents">
         {/* Hero */}
         <section className="h-[464px] bg-[url('/images/barber-background-grayscale.jpg')] bg-cover px-16 py-16 xl:px-32">
-          <div className="flex items-baseline justify-between">
-            {/* Welcome & Search */}
-            <div className="flex flex-col xl:w-[320px]">
-              <h2 className="text-xl font-bold">
-                Hello,{" "}
-                {session?.user ? session.user.name?.split(" ")[0] : "Welcome"}!
-              </h2>
-              <p>{today}</p>
-              <div className="mt-6">
-                <Search />
+          <div className="flex justify-between">
+            <div className="flex flex-col justify-between">
+              <div className="flex flex-col">
+                <h2 className="text-xl font-bold">
+                  Hello,{" "}
+                  {session?.user ? session.user.name?.split(" ")[0] : "Welcome"}
+                  !
+                </h2>
+                <p className="mb-6">{today}</p>
+                <div className="w-[360px]">
+                  <Search />
+                </div>
+              </div>
+              <div className="flex flex-col space-y-3">
+                {session?.user && hasConfirmedBookings && (
+                  <>
+                    <h2 className="text-xs font-bold uppercase text-gray-400">
+                      Bookings
+                    </h2>
+                    <BookingItem
+                      key={confirmedBookings[0].id}
+                      booking={JSON.parse(JSON.stringify(confirmedBookings[0]))}
+                    />
+                  </>
+                )}
               </div>
             </div>
             {/* Recommended */}
@@ -152,54 +165,55 @@ const Home = async () => {
               <h2 className="text-xs font-bold uppercase text-gray-400">
                 Recommended
               </h2>
-              <div className="flex gap-4 overflow-auto [&::-webkit-scrollbar]:hidden">
-                {recommendedBarbershops.map((barbershop) => (
-                  <BarbershopItem key={barbershop.id} barbershop={barbershop} />
-                ))}
-              </div>
+              <Carousel opts={{ align: "start" }}>
+                <CarouselContent className="-ml-4 max-w-[490px] cursor-pointer xl:max-w-[720px]">
+                  {recommendedBarbershops.map((barbershop) => (
+                    <CarouselItem
+                      key={barbershop.id}
+                      className="basis-1/2 pl-4 xl:basis-1/3"
+                    >
+                      <BarbershopItem barbershop={barbershop} />
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                {/* <CarouselPrevious className="h-12 w-12 ml-5" /> */}
+                <CarouselNext className="mr-6 h-12 w-12" />
+              </Carousel>
             </div>
           </div>
         </section>
 
-        {/* Bookings */}
-        {session?.user && hasConfirmedBookings && (
-          <section className="px-16 py-4 xl:px-32">
-            <h2 className="mb-3 mt-6 text-xs font-bold uppercase text-gray-400">
-              Bookings
-            </h2>
-            <Carousel opts={{ align: "start" }}>
-              <CarouselContent className="-ml-8">
-                {confirmedBookings.map((booking) => (
-                  <CarouselItem
-                    key={booking.id}
-                    className="basis-1/2 pl-8 xl:basis-1/4"
-                  >
-                    <BookingItem
-                      key={booking.id}
-                      booking={JSON.parse(JSON.stringify(booking))}
-                    />
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-              <CarouselPrevious />
-              <CarouselNext />
-            </Carousel>
-          </section>
-        )}
-
         {/* Popular */}
-        <section className="px-16 py-4 xl:px-32">
+        <section className="px-16 pt-8 xl:px-32">
           <h2 className="mb-3 mt-6 text-xs font-bold uppercase">Popular</h2>
           <Carousel opts={{ align: "start" }}>
-            <CarouselContent className="-ml-8">
+            <CarouselContent className="-ml-4 cursor-pointer">
               {popularBarbershops.map((barbershop) => (
-                <CarouselItem key={barbershop.id} className="basis-1/5 pl-8">
+                <CarouselItem key={barbershop.id} className="basis-1/5 pl-4">
                   <BarbershopItem barbershop={barbershop} />
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious />
-            <CarouselNext />
+            <CarouselPrevious className="ml-5 h-12 w-12" />
+            <CarouselNext className="mr-5 h-12 w-12" />
+          </Carousel>
+        </section>
+
+        {/* Most visited */}
+        <section className="px-16 py-8 xl:px-32">
+          <h2 className="mb-3 mt-6 text-xs font-bold uppercase">
+            Most visited
+          </h2>
+          <Carousel opts={{ align: "start" }}>
+            <CarouselContent className="-ml-4 cursor-pointer">
+              {popularBarbershops.map((barbershop) => (
+                <CarouselItem key={barbershop.id} className="basis-1/5 pl-4">
+                  <BarbershopItem barbershop={barbershop} />
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="ml-5 h-12 w-12" />
+            <CarouselNext className="mr-5 h-12 w-12" />
           </Carousel>
         </section>
       </div>
