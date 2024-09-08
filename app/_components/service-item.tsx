@@ -163,7 +163,7 @@ export const ServiceItem = ({ service, barbershop }: ServiceItemProps) => {
                 </Button>
                 <SheetContent className="px-0">
                   <SheetHeader>
-                    <SheetTitle>Book a service</SheetTitle>
+                    <SheetTitle className="md:px-5">Book a service</SheetTitle>
                   </SheetHeader>
 
                   <div className="border-b border-solid py-5">
@@ -173,6 +173,10 @@ export const ServiceItem = ({ service, barbershop }: ServiceItemProps) => {
                       selected={selectedDay}
                       onSelect={selectDateHandler}
                       fromDate={new Date()}
+                      classNames={{
+                        month: "w-full",
+                        head_cell: "mt-4 text-primary",
+                      }}
                       styles={{
                         head_cell: {
                           width: "100%",
