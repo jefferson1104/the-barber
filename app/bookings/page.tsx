@@ -93,7 +93,10 @@ const Bookings = async () => {
               <h2 className="mt-6 text-xs font-bold uppercase text-gray-400">
                 Confirmed
               </h2>
-              <Carousel opts={{ align: "start", inViewThreshold: 1 }}>
+              <Carousel
+                key={confirmedBookings.length}
+                opts={{ align: "start" }}
+              >
                 <CarouselContent className="cursor-pointer lg:w-[420px]">
                   {confirmedBookings.map((booking) => (
                     <CarouselItem key={booking.id}>

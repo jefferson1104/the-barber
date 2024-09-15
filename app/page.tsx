@@ -176,7 +176,7 @@ const Home = async () => {
                     </CarouselItem>
                   ))}
                 </CarouselContent>
-                {/* <CarouselPrevious className="h-12 w-12 ml-5" /> */}
+                <CarouselPrevious className="ml-5 h-12 w-12" />
                 <CarouselNext className="mr-6 h-12 w-12" />
               </Carousel>
             </div>
