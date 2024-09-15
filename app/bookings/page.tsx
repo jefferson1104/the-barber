@@ -82,7 +82,7 @@ const Bookings = async () => {
 
           {/* Empty Bookings */}
           {confirmedBookings.length === 0 && finalizedBookings.length === 0 && (
-            <div className="mt-6 text-left text-gray-400">
+            <div className="mt-6 px-16 text-left text-gray-400">
               No confirmed bookings found.
             </div>
           )}
