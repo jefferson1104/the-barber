@@ -2,6 +2,7 @@ import "./globals.css"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import { Toaster } from "sonner"
+import NextTopLoader from "nextjs-toploader"
 
 import AuthProvider from "./_providers/auth"
 
@@ -22,6 +23,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body className={inter.className}>
+        <NextTopLoader color="#8161FF" showSpinner={false} />
         <AuthProvider>
           <div className="flex h-full flex-col">
             <main className="flex-1">{children}</main>
